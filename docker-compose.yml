@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  db:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data/
+    env_file:
+      - ./postgres/.env
+    ports:
+      - 5432:5432
+    container_name: aw-db
+
+  notebook:
+    build:
+      context: ./notebook
+      dockerfile: Dockerfile
+    volumes:
+        - ./notebook:/home/jovyan/work
+    ports:
+        - "8040:8040"
+        - "8888:8888"
+    depends_on:
+        - db
+    container_name: aw-nb
